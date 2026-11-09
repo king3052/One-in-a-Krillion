@@ -100,16 +100,17 @@
   #qform.shake{animation:shake .4s}
   @keyframes shake{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
   #reveal{display:none}
-  #reveal.on{display:block;animation:rise .8s ease both}
+  #reveal.on{display:block}
+  .fade{opacity:0;transform:translateY(8px);transition:opacity .8s ease, transform .8s ease}
+  .fade.show{opacity:1;transform:none}
   @keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
   #reveal .row{display:grid;grid-template-columns:96px 1fr;gap:10px;align-items:baseline;padding:10px 0;border-top:1px solid rgba(90,36,72,.12)}
   #reveal .lab{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--plum-soft)}
   #reveal .val{font-family:'Instrument Serif',serif;font-size:22px;line-height:1.2;word-break:break-word}
   #reveal .his .val{font-style:italic}
-  #reveal .his{opacity:0;animation:rise .9s ease .9s forwards}
-  #reveal .tier{margin-top:12px;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#c0396e;opacity:0;animation:rise .8s ease 1.7s forwards}
+  #reveal .tier{margin-top:12px;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#c0396e}
   #reveal .tier i{display:inline-block;width:7px;height:7px;border-radius:50%;background:#e0487a;margin-right:8px;box-shadow:0 0 10px #ff8fb8;font-style:normal}
-  #next{opacity:0;animation:rise .8s ease 1.6s forwards;padding:16px 34px;font-size:13px;letter-spacing:.24em}
+  #next{padding:16px 34px;font-size:13px;letter-spacing:.24em}
   #msg .from{margin-top:22px;font-family:'Instrument Serif',serif;font-style:italic;font-size:clamp(22px,3.6vw,28px);color:var(--plum)}
   #deep{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:0;
     background:radial-gradient(ellipse at 50% 75%,#5a1d4c 0%,#2a0d27 55%,#12050f 100%)}
@@ -176,9 +177,9 @@
       <button type="submit">dive ↓</button>
     </form>
     <div id="reveal">
-      <div class="row her"><span class="lab">maithili said</span><span class="val" id="herVal"></span></div>
-      <div class="row his"><span class="lab">kanishk said</span><span class="val" id="hisVal"></span></div>
-      <div class="tier"><i></i><span id="tierTxt"></span></div>
+      <div class="row her fade"><span class="lab">maithili said</span><span class="val" id="herVal"></span></div>
+      <div class="row his fade"><span class="lab">kanishk said</span><span class="val" id="hisVal"></span></div>
+      <div class="tier fade"><i></i><span id="tierTxt"></span></div>
     </div>
   </div>
 
@@ -196,7 +197,7 @@
 
   <div id="controls">
     <button id="dive">dive in ↓</button>
-    <button id="next" class="hidden" type="button">descend ▼</button>
+    <button id="next" class="hidden fade" type="button">descend ▼</button>
     <button id="replay" class="hidden">replay ↺</button>
   </div>
 
@@ -682,7 +683,7 @@ function showCompleted(){
 }
 /* ---------- the dive: prompts ---------- */
 const card=$('card'), qform=$('qform'), qin=$('qin'), revealEl=$('reveal');
-let qi=0, answered=false;
+let qi=0, answered=false, revealTimers=[];
 const norm=x=>x.toLowerCase().replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim();
 function showPrompt(i){
   qi=i; answered=false;
@@ -706,10 +707,14 @@ function answer(txt){
   $('tierTxt').textContent = tierTxt;
   document.querySelector('#reveal .tier').style.display = tierTxt ? '' : 'none';
   qform.style.display='none';
-  // restart the reveal animations
-  revealEl.classList.remove('on'); void revealEl.offsetWidth; revealEl.classList.add('on');
+  // reveal: her answer, then his, then badge + descend (timed classes — reliable on iPhone)
   const nb=$('next'); nb.textContent = P.last ? 'reach the bottom ▼' : 'descend ▼';
-  nb.classList.add('hidden'); void nb.offsetWidth; nb.classList.remove('hidden');
+  revealTimers.forEach(clearTimeout); revealTimers=[];
+  const parts=[revealEl.querySelector('.her'),revealEl.querySelector('.his'),revealEl.querySelector('.tier'),nb];
+  parts.forEach(el=>el.classList.remove('show'));
+  revealEl.classList.add('on'); nb.classList.remove('hidden');
+  void revealEl.offsetWidth;
+  [[0,60],[1,900],[2,1700],[3,1600]].forEach(([i,ms])=>revealTimers.push(setTimeout(()=>parts[i].classList.add('show'),ms)));
   qin.blur();
   unlock();
 }
