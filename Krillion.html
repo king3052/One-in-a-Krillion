@@ -133,7 +133,7 @@
 
   <div id="intro">
     <p class="kicker">for maithili</p>
-    <h1>a blank canvas</h1>
+    <h1>krillion</h1>
     <p class="sub">seven prompts · seven thousand meters</p>
   </div>
 
@@ -145,7 +145,7 @@
       <button type="submit">dive ↓</button>
     </form>
     <div id="reveal">
-      <div class="row her"><span class="lab">you said</span><span class="val" id="herVal"></span></div>
+      <div class="row her"><span class="lab">maithili said</span><span class="val" id="herVal"></span></div>
       <div class="row his"><span class="lab">kanishk said</span><span class="val" id="hisVal"></span></div>
       <div class="tier"><i></i><span id="tierTxt"></span></div>
     </div>
@@ -248,13 +248,13 @@ let pending=-1;                         // static layer currently fading in
 let finalOn=false, finalT=0;
 
 const PROMPTS=[
-  {q:'Name the <em>first thing</em> you ever said to me.', a:"pretty sure I texted you something about registration. smooth, I know.", keys:['registration','register','regist']},
-  {q:'Name a food you love that I <em>make fun of you</em> for.', a:'cottage cheese. I stand by it.', keys:['cottage']},
-  {q:'Name something we talk about <em>wayyy</em> too much.', a:'my aura and my nonchalance.', keys:['aura','nonchalan','chalant']},
-  {q:'Name your favorite <em>cartoon character</em>.', a:'Hello Kitty, obviously.', keys:['hello kitty','hellokitty','kitty']},
-  {q:'Name something we <em>have to do together</em> this year.', a:'a midnight hike?? (this is me asking.)', keys:['hike','midnight']},
+  {q:'Name the <em>first thing</em> I ever said to you.', a:"pretty sure I texted you smt abt registration...", keys:['registration','register','regist', 'slid', 'note', 'text']},
+  {q:'Name a food you love that I make fun of you for.', a:'cottage cheese', keys:['cottage', 'cheese']},
+  {q:'Name something we talk about <em>wayyy</em> too much.', a:'my aura and my nonchalantness.', keys:['aura','nonchalan','chalant']},
+  {q:'Name your favorite <em>cartoon character</em>.', a:'Hello Kitty.', keys:['hello kitty','hellokitty','kitty']},
+  {q:'Name something <em>we</em> have to do together this year.', a:'a midnight hike?? (this is me asking, ofc im not scared)', keys:['hike','midnight']},
   {q:'Name something I <em>really like</em> about you.', a:"how authentic you are. I can literally tell you anything.", keys:['authentic','honest','real','anything','genuine']},
-  {q:'Name how many <em>krill</em> you\'re worth.', a:'one in a krillion.', keys:['krillion'], last:true},
+  {q:'How many <em>krill</em> point thingies are you...?', a:'one in a krillion.', keys:['krillion'], last:true},
 ];
 const LAYERS=[
   ['1,000 m','the surface light'],
